@@ -25,3 +25,25 @@ Right - right arrow, d,
 Jump- space bar, w
 Attack - f
 
+
+Credits
+hacked from xna platformer starter kit 
+http://xbox.create.msdn.com/en-US/education/starterkits/
+
+Sprites
+http://opengameart.org/
+
+For Monster sprite
+Platformer graphics (Deluxe) by Kenney Vleugels (www.kenney.nl)
+
+For Player sprite
+http://opengameart.org/content/platformer-or-fighter-sprites
+
+for general q and a
+http://stackoverflow.com/
+http://gamedev.stackexchange.com/
+
+for the GetHorizontalIntersectionDepth and GetVerticalIntersectionDepth Rect Exts.
+http://gamedev.stackexchange.com/users/11686/david-gouveia
+http://gamedev.stackexchange.com/questions/22118/how-can-i-use-rectangle-intersect-to-resolve-
+collisions-in-xna
