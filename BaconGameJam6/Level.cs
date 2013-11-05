@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
+using BaconGameJam6.Enum;
+using BaconGameJam6.Structures;
 
 namespace BaconGameJam6
 {
@@ -16,11 +18,17 @@ namespace BaconGameJam6
     /// The level owns the player and controls the game's win and lose
     /// conditions as well as scoring.
     /// </summary>
-    class Level : IDisposable
+    public class Level : IDisposable
     {
         // Physical structure of the level.
         private Tile[,] tiles;
         private Texture2D[] layers;
+        Random randomizer = new Random();
+
+        Texture2D explosionTexture;
+
+        List<ParticleData> particleList = new List<ParticleData>();
+
         // The layer which entities are drawn on top of.
         private const int EntityLayer = 2;
 
@@ -86,6 +94,7 @@ namespace BaconGameJam6
         {
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
+            explosionTexture = content.Load<Texture2D>("explosion");
 
             timeRemaining = TimeSpan.FromMinutes(0.25);
 
@@ -360,6 +369,40 @@ namespace BaconGameJam6
 
         #endregion
 
+
+
+        #region Particle Effects
+        
+        private void AddExplosion(Vector2 explosionPos, int numberOfParticles, float size, float maxAge, GameTime gameTime)
+        {
+            for (int i = 0; i < numberOfParticles; i++)
+                AddExplosionParticle(explosionPos, size, maxAge, gameTime);
+        }
+
+        private void AddExplosionParticle(Vector2 explosionPos, float explosionSize, float maxAge, GameTime gameTime)
+        {
+            ParticleData particle = new ParticleData();
+
+            particle.OrginalPosition = explosionPos;
+            particle.Position = particle.OrginalPosition;
+
+            particle.BirthTime = (float)gameTime.TotalGameTime.TotalMilliseconds;
+            particle.MaxAge = maxAge;
+            particle.Scaling = 0.25f;
+            particle.ModColor = Color.White;
+            
+            float particleDistance = (float)randomizer.NextDouble() * explosionSize;
+            Vector2 displacement = new Vector2(particleDistance, 0);
+            float angle = MathHelper.ToRadians(randomizer.Next(360));
+            displacement = Vector2.Transform(displacement, Matrix.CreateRotationZ(angle));
+
+            particle.Direction = displacement;
+            particle.Accelaration = 3.0f * particle.Direction;
+
+            particleList.Add(particle);
+        }
+        #endregion Particle Effects
+
         #region Update
 
         /// <summary>
@@ -395,6 +438,10 @@ namespace BaconGameJam6
             {
                 timeRemaining -= gameTime.ElapsedGameTime;
                 Player.Update(gameTime, keyboardState, gamePadState, orientation);
+                if (Player.isAttacking) 
+                {
+                    OnPlayerAttacks(gameTime);
+                }
                 UpdateGems(gameTime);
 
                 // Falling off the bottom of the level kills the player.
@@ -417,8 +464,13 @@ namespace BaconGameJam6
             // Clamp the time remaining at zero.
             if (timeRemaining < TimeSpan.Zero)
                 timeRemaining = TimeSpan.Zero;
+        }
 
-            
+        private void OnPlayerAttacks(GameTime gameTime)
+        {
+            var explosionPosition = (Player.Position + Player.AttackOffset);
+            drawEffect = true;
+            AddExplosion(explosionPosition, 10, 80.0f, 2000.0f, gameTime);
         }
 
         /// <summary>
@@ -449,21 +501,15 @@ namespace BaconGameJam6
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(gameTime);
+                if (player.IsAttacking && enemy.BoundingRectangle.Intersects(Player.AttactRectangle) && !enemy.IsDead) 
+                {
+                    enemy.TakeDamage();
+                    score++;
+                }
 
                 if (enemy.BoundingRectangle.Intersects(Player.BoundingRectangle) && !enemy.IsDead)
                 {
-                    //must fix for rect relationship
-                    float depth = Player.BoundingRectangle.GetHorizontalIntersectionDepth(enemy.BoundingRectangle);
-
-                    if (depth != 0 && player.IsAttacking)
-                    {
-                        enemy.TakeDamage();
-                        score++;
-                    }
-                    else
-                    {
-                        OnPlayerKilled(enemy);
-                    }
+                    OnPlayerKilled(enemy);
                 }
             }
         }
@@ -528,6 +574,12 @@ namespace BaconGameJam6
                 gem.Draw(gameTime, spriteBatch);
 
             Player.Draw(gameTime, spriteBatch);
+            
+            if(Player.isAttacking)
+            {
+                spriteBatch.Draw(Player.attackEffect,Player.AttactRectangle,Color.Yellow);
+            }
+
             foreach (Enemy enemy in enemies)
             {
                 if (!enemy.IsDead)
@@ -542,6 +594,7 @@ namespace BaconGameJam6
                     }
                 }
             }
+            //DrawExplosion(spriteBatch);
 
             for (int i = EntityLayer + 1; i < layers.Length; ++i)
                 spriteBatch.Draw(layers[i], Vector2.Zero, Color.White);
@@ -569,6 +622,17 @@ namespace BaconGameJam6
             }
         }
 
+        private void DrawExplosion(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < particleList.Count; i++)
+            {
+                ParticleData particle = particleList[i];
+                spriteBatch.Draw(explosionTexture, particle.Position, null, particle.ModColor, i, new Vector2(256, 256), particle.Scaling, SpriteEffects.None, 1);
+            }
+        }
+
         #endregion
+
+        public bool drawEffect { get; set; }
     }
 }

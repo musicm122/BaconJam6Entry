@@ -4,24 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using BaconGameJam6.Enum;
 
 namespace BaconGameJam6
 {
-    /// <summary>
-    /// Facing direction along the X axis.
-    /// </summary>
-    enum FaceDirection
-    {
-        Left = -1,
-        Right = 1,
-    }
+    
 
     /// <summary>
     /// A monster who is impeding the progress of our fearless adventurer.
     /// </summary>
-    class Enemy
+    public class Enemy
     {
-
         private float MaxCooldownTime= 0.5f;
         private float CooldownTimer = 0.5f;
         public bool IsCoolingDown = false;
