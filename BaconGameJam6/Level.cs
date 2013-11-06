@@ -10,6 +10,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Input;
 using BaconGameJam6.Enum;
 using BaconGameJam6.Structures;
+using System.Collections;
 
 namespace BaconGameJam6
 {
@@ -95,8 +96,10 @@ namespace BaconGameJam6
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
             explosionTexture = content.Load<Texture2D>("explosion");
+            
+            timeRemaining = TimeSpan.FromMinutes(5);
 
-            timeRemaining = TimeSpan.FromMinutes(0.25);
+            //timeRemaining = TimeSpan.FromMinutes(0.25);
 
             LoadTiles(fileStream);
 
@@ -497,7 +500,6 @@ namespace BaconGameJam6
         /// </summary>
         private void UpdateEnemies(GameTime gameTime)
         {
-            
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(gameTime);
@@ -553,7 +555,37 @@ namespace BaconGameJam6
         /// </summary>
         public void StartNewLife()
         {
-            Player.Reset(start);
+            //First try at default start position
+            Player.Position= start;
+            
+            //get the distance from the player the enemies need to be
+            var playerRange = Enumerable.Range((int)Player.Position.X - 3, (int)Player.Position.X + 3);
+
+            //if player bounding box is not intersecting with any enemy then respawn
+            var livingEnemies = enemies.Where(x => !x.IsDead );
+            
+            //using the default back buffer so we can get a number that is guarnteed to be inside the screen
+            Vector2 playerXoffset = new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth/8, 0f);
+
+            //Incrememt players x position while player is intersecting an enemy and is on the same y plane as the enemy
+            while (livingEnemies.Where(x => playerRange.Contains((int)x.Position.X) && x.Position.Y==Player.Position.Y).Count() > 0)
+            {
+                //move the player
+                Player.Position+=playerXoffset;
+                
+                //Reset the player offset
+                playerRange = Enumerable.Range((int)Player.Position.X - 3, (int)Player.Position.X + 3);
+
+                //If Player is outside the bounds of the screen
+                if (Player.Position.X > GraphicsDeviceManager.DefaultBackBufferWidth) 
+                {
+                    //Try for the default spawn point
+                    Player.Position = start;
+                }
+            }
+            
+            //reset the state of the player(from dead to alive)
+            Player.Reset();
         }
 
         #endregion

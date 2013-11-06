@@ -172,8 +172,9 @@ namespace BaconGameJam6
         }
         #endregion Attack;
 
-        FaceDirection playerFacing = FaceDirection.Right;
-
+        #region Properties
+        
+        public FaceDirection playerFacing = FaceDirection.Right;
         public GamePadState PreviousGamepadState { get; set; }
         public KeyboardState PreviousKeyboardState { get; set; }
 
@@ -232,6 +233,7 @@ namespace BaconGameJam6
                 return new Rectangle(left, top, localBounds.Width, localBounds.Height);
             }
         }
+        #endregion Properties
 
         /// <summary>
         /// Constructors a new player.
@@ -282,6 +284,13 @@ namespace BaconGameJam6
         public void Reset(Vector2 position)
         {
             Position = position;
+            Velocity = Vector2.Zero;
+            isAlive = true;
+            sprite.PlayAnimation(idleAnimation);
+        }
+
+        public void Reset()
+        {
             Velocity = Vector2.Zero;
             isAlive = true;
             sprite.PlayAnimation(idleAnimation);

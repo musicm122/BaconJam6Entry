@@ -167,8 +167,8 @@ namespace BaconGameJam6
                 Exit();
 
             bool continuePressed =
-                keyboardState.IsKeyDown(Keys.Space) ||
-                gamePadState.IsButtonDown(Buttons.A);
+                keyboardState.IsKeyDown(Keys.Enter) ||
+                gamePadState.IsButtonDown(Buttons.Start);
                 
 
             // Perform the appropriate action to advance the game and
