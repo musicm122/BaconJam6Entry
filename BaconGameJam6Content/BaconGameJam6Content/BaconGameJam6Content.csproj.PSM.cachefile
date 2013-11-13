@@ -45,6 +45,7 @@ Content\Sprites\Player\quickAttack.xnb
 Content\Sprites\Player\dead.xnb
 Content\Sprites\TheRainbow\Idle.xnb
 Content\Sprites\TheRainbow\Run.xnb
+Content\explosion.xnb
 Content\Sounds\ExitReached.xnb
 Content\Sounds\GemCollected.xnb
 Content\Sounds\MonsterKilled.xnb
@@ -54,7 +55,6 @@ Content\Sounds\PlayerJump.xnb
 Content\Sounds\PlayerKilled.xnb
 Content\Sounds\Powerup.xnb
 Content\Fonts\Hud.xnb
-Content\explosion.xnb
 Content\Sounds\ExitReached.wma
 Content\Sounds\GemCollected.wma
 Content\Sounds\MonsterKilled.wma

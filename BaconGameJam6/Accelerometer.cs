@@ -1,17 +1,20 @@
 #region File Description
+
 //-----------------------------------------------------------------------------
 // Accelerometer.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+
+#endregion File Description
 
 #region Using Statements
+
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-#endregion
+
+#endregion Using Statements
 
 namespace BaconGameJam6
 {
@@ -24,7 +27,7 @@ namespace BaconGameJam6
 #if WINDOWS_PHONE
         // the accelerometer sensor on the device
         private static Microsoft.Devices.Sensors.Accelerometer accelerometer = new Microsoft.Devices.Sensors.Accelerometer();
-        
+
         // we need an object for locking because the ReadingChanged event is fired
         // on a different thread than our game
         private static object threadLock = new object();
@@ -51,8 +54,8 @@ namespace BaconGameJam6
             }
 
 #if WINDOWS_PHONE
-            // try to start the sensor only on devices, catching the exception if it fails            
-            if (Microsoft.Devices.Environment.DeviceType == Microsoft.Devices.DeviceType.Device)            
+            // try to start the sensor only on devices, catching the exception if it fails
+            if (Microsoft.Devices.Environment.DeviceType == Microsoft.Devices.DeviceType.Device)
             {
                 try
                 {
@@ -76,7 +79,7 @@ namespace BaconGameJam6
             // remember that we are initialized
             isInitialized = true;
         }
-        
+
 #if WINDOWS_PHONE
         private static void sensor_ReadingChanged(object sender, Microsoft.Devices.Sensors.AccelerometerReadingEventArgs e)
         {

@@ -43,8 +43,14 @@
     <Compile Include="Enum\TileCollision.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="GameState\GameStateIntro.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameState\GameStateActivePlay.cs" />
+    <Compile Include="GameState\GameStatePause.cs" />
     <Compile Include="Gem.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="GameState\GameStateMainMenu.cs" />
     <Compile Include="PlatformerGame.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Program.cs" />
@@ -79,8 +85,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="Menu\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BitBucket\nuclearwinter\NuclearWinter\NuclearWinterMonoGame.csproj">
+      <Project>{72677817-5174-4921-8E10-BD54E73EB965}</Project>
+      <Name>NuclearWinterMonoGame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BaconGameJam6Content\BaconGameJam6Content\BaconGameJam6Content.csproj">
       <Project>{1F44A730-1E26-4EB6-9851-0C4E178225CD}</Project>
       <Name>BaconGameJam6Content</Name>

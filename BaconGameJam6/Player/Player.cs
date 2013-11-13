@@ -1,37 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 using BaconGameJam6.Enum;
-using BaconGameJam6.Structures;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace BaconGameJam6
 {
     public partial class Player
     {
         #region Constants
+
         // Constants for controling horizontal movement
         private const float MoveAcceleration = 13000.0f;
+
         private const float MaxMoveSpeed = 1750.0f;
         private const float GroundDragFactor = 0.48f;
         private const float AirDragFactor = 0.58f;
 
         // Input configuration
         private const float MoveStickScale = 1.0f;
+
         private const float AccelerometerScale = 1.5f;
+
         #endregion Constants
 
         #region Animations
+
         private Animation idleAnimation;
         private Animation runAnimation;
         private Animation celebrateAnimation;
         private Animation dieAnimation;
-        
+
         private SpriteEffects flip = SpriteEffects.None;
         private AnimationPlayer sprite;
 
@@ -39,18 +38,20 @@ namespace BaconGameJam6
 
         #region Jump
 
-        Animation jumpAnimation { get; set; }
+        private Animation jumpAnimation { get; set; }
 
         // Constants for controlling vertical movement
-        const Buttons JumpButton = Buttons.A;
-        const float MaxJumpTime = 0.35f;
-        const float JumpLaunchVelocity = -3500.0f;
-        const float GravityAcceleration = 3400.0f;
-        const float MaxFallSpeed = 550.0f;
-        const float JumpControlPower = 0.14f;
+        private const Buttons JumpButton = Buttons.A;
+
+        private const float MaxJumpTime = 0.35f;
+        private const float JumpLaunchVelocity = -3500.0f;
+        private const float GravityAcceleration = 3400.0f;
+        private const float MaxFallSpeed = 550.0f;
+        private const float JumpControlPower = 0.14f;
 
         // Jumping state
         private bool isJumping;
+
         private bool wasJumping;
         private float jumpTime;
 
@@ -58,7 +59,8 @@ namespace BaconGameJam6
         {
             get { return isOnGround; }
         }
-        bool isOnGround;
+
+        private bool isOnGround;
 
         /// <summary>
         /// Calculates the Y velocity accounting for jumping and
@@ -77,7 +79,7 @@ namespace BaconGameJam6
         /// A new Y velocity if beginning or continuing a jump.
         /// Otherwise, the existing Y velocity.
         /// </returns>
-        private float DoJump(float velocityY, GameTime gameTime)
+        private float DoJump(float velocityY, float gameTime)
         {
             // If the player wants to jump
             if (isJumping)
@@ -89,7 +91,7 @@ namespace BaconGameJam6
                         Console.WriteLine("JumpSound plays");
                     //jumpSound.Play();
 
-                    jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    jumpTime += gameTime;
                     sprite.PlayAnimation(jumpAnimation);
                 }
 
@@ -114,17 +116,21 @@ namespace BaconGameJam6
 
             return velocityY;
         }
+
         #endregion Jump
 
         #region Attack
 
         public Texture2D attackEffect;
-        Animation attackAnimation { get; set; }
+
+        private Animation attackAnimation { get; set; }
+
         public Rectangle AttactRectangle { get; set; }
+
         public Vector2 AttackOffset = new Vector2(64f, 64f);
-        const Buttons AttackButton = Buttons.X;
-        const Keys AttackKey = Keys.F;
-        const float MaxAttackTime = 0.33f;
+        private const Buttons AttackButton = Buttons.X;
+        private const Keys AttackKey = Keys.F;
+        private const float MaxAttackTime = 0.33f;
         public bool isAttacking;
         public bool wasAttacking;
         public float attackingTime;
@@ -139,9 +145,9 @@ namespace BaconGameJam6
             get { return wasAttacking; }
         }
 
-        public void DoAttack(GameTime gameTime)
+        public void DoAttack(float gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float elapsed = gameTime;
             if (isAttacking)
             {
                 int PosOrNeg = (int)playerFacing;
@@ -153,12 +159,11 @@ namespace BaconGameJam6
                 else if (playerFacing == FaceDirection.Left)
                 {
                     AttactRectangle = new Rectangle((PosOrNeg * (int)AttackOffset.X + (int)position.X), ((int)position.Y - 64), (int)AttackOffset.X, (int)AttackOffset.Y);
-
                 }
                 Console.WriteLine("Attack plays");
                 attackingTime = MaxAttackTime;
             }
-            
+
             if (attackingTime > 0)
             {
                 sprite.PlayAnimation(attackAnimation);
@@ -168,14 +173,16 @@ namespace BaconGameJam6
             {
                 attackingTime = 0;
             }
-            
         }
-        #endregion Attack;
+
+        #endregion Attack
 
         #region Properties
-        
+
         public FaceDirection playerFacing = FaceDirection.Right;
+
         public GamePadState PreviousGamepadState { get; set; }
+
         public KeyboardState PreviousKeyboardState { get; set; }
 
         // Sounds
@@ -194,7 +201,8 @@ namespace BaconGameJam6
         {
             get { return isAlive; }
         }
-        bool isAlive;
+
+        private bool isAlive;
 
         // Physics state
         public Vector2 Position
@@ -202,7 +210,8 @@ namespace BaconGameJam6
             get { return position; }
             set { position = value; }
         }
-        Vector2 position;
+
+        private Vector2 position;
 
         private float previousBottom;
 
@@ -211,7 +220,8 @@ namespace BaconGameJam6
             get { return velocity; }
             set { velocity = value; }
         }
-        Vector2 velocity;
+
+        private Vector2 velocity;
 
         /// <summary>
         /// Current user movement input.
@@ -233,6 +243,7 @@ namespace BaconGameJam6
                 return new Rectangle(left, top, localBounds.Width, localBounds.Height);
             }
         }
+
         #endregion Properties
 
         /// <summary>
@@ -247,7 +258,6 @@ namespace BaconGameJam6
             Reset(position);
         }
 
-
         /// <summary>
         /// Loads the player sprite sheet and sounds.
         /// </summary>
@@ -261,21 +271,19 @@ namespace BaconGameJam6
             celebrateAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/Celebrate"), 0.1f, false);
             dieAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/dead"), 0.3f, false);
             attackEffect = RefLevel.Content.Load<Texture2D>("Explosion");
-            
 
-            // Calculate bounds within texture size.            
+            // Calculate bounds within texture size.
             int width = (int)(idleAnimation.FrameWidth * 0.4);
             int left = (idleAnimation.FrameWidth - width) / 2;
             int height = (int)(idleAnimation.FrameWidth * 0.8);
             int top = idleAnimation.FrameHeight - height;
             localBounds = new Rectangle(left, top, width, height);
 
-            // Load sounds.            
+            // Load sounds.
             //killedSound = Level.Content.Load<SoundEffect>("Sounds/PlayerKilled");
             //jumpSound = Level.Content.Load<SoundEffect>("Sounds/PlayerJump");
             //fallSound = Level.Content.Load<SoundEffect>("Sounds/PlayerFall");
         }
-
 
         /// <summary>
         /// Resets the player to life.
@@ -305,7 +313,7 @@ namespace BaconGameJam6
         /// we need to reverse our motion when the orientation is in the LandscapeRight orientation.
         /// </remarks>
         public void Update(
-            GameTime gameTime,
+            float gameTime,
             KeyboardState keyboardState,
             GamePadState gamePadState,
             DisplayOrientation orientation)
@@ -313,7 +321,6 @@ namespace BaconGameJam6
             GetInput(keyboardState, gamePadState, orientation);
 
             ApplyPhysics(gameTime);
-            
 
             if (IsAlive && IsOnGround)
             {
@@ -333,7 +340,6 @@ namespace BaconGameJam6
             movement = 0.0f;
             isJumping = false;
             //isAttacking = false;
-
         }
 
         /// <summary>
@@ -381,20 +387,18 @@ namespace BaconGameJam6
             isAttacking =
                 (gamePadState.IsButtonDown(AttackButton) && !PreviousGamepadState.IsButtonDown(AttackButton))
                 || (keyboardState.IsKeyDown(AttackKey) && !PreviousKeyboardState.IsKeyDown(AttackKey));
-            
+
             PreviousKeyboardState = keyboardState;
             PreviousGamepadState = gamePadState;
-
-
         }
 
         /// <summary>
         /// Updates the player's velocity and position based on input, gravity, etc.
         /// </summary>
 
-        public void ApplyPhysics(GameTime gameTime)
+        public void ApplyPhysics(float gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float elapsed = gameTime;
 
             Vector2 previousPosition = Position;
 
@@ -411,7 +415,7 @@ namespace BaconGameJam6
             else
                 velocity.X *= AirDragFactor;
 
-            // Prevent the player from running faster than his top speed.            
+            // Prevent the player from running faster than his top speed.
             velocity.X = MathHelper.Clamp(velocity.X, -MaxMoveSpeed, MaxMoveSpeed);
 
             // Apply velocity.
@@ -530,7 +534,7 @@ namespace BaconGameJam6
         /// <summary>
         /// Draws the animated player.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(float gameTime, SpriteBatch spriteBatch)
         {
             // Flip the sprite to face the way we are moving.
             if (Velocity.X > 0)
@@ -540,8 +544,6 @@ namespace BaconGameJam6
 
             // Draw that sprite.
             sprite.Draw(gameTime, spriteBatch, Position, flip);
-            
-
         }
     }
 }

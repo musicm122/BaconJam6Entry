@@ -1,23 +1,24 @@
 ﻿#region File Description
+
 //-----------------------------------------------------------------------------
 // Gem.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+
+#endregion File Description
 
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
 
 namespace BaconGameJam6
 {
     /// <summary>
     /// A valuable item the player can collect.
     /// </summary>
-    class Gem
+    internal class Gem
     {
         private Texture2D texture;
         private Vector2 origin;
@@ -28,13 +29,15 @@ namespace BaconGameJam6
 
         // The gem is animated from a base position along the Y axis.
         private Vector2 basePosition;
+
         private float bounce;
 
         public Level Level
         {
             get { return level; }
         }
-        Level level;
+
+        private Level level;
 
         /// <summary>
         /// Gets the current position of this gem in world space.
@@ -82,7 +85,7 @@ namespace BaconGameJam6
         /// <summary>
         /// Bounces up and down in the air to entice players to collect them.
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(float gameTime)
         {
             // Bounce control constants
             const float BounceHeight = 0.18f;
@@ -90,8 +93,8 @@ namespace BaconGameJam6
             const float BounceSync = -0.75f;
 
             // Bounce along a sine curve over time.
-            // Include the X coordinate so that neighboring gems bounce in a nice wave pattern.            
-            double t = gameTime.TotalGameTime.TotalSeconds * BounceRate + Position.X * BounceSync;
+            // Include the X coordinate so that neighboring gems bounce in a nice wave pattern.
+            double t = gameTime * BounceRate + Position.X * BounceSync;
             bounce = (float)Math.Sin(t) * BounceHeight * texture.Height;
         }
 
@@ -110,7 +113,7 @@ namespace BaconGameJam6
         /// <summary>
         /// Draws a gem in the appropriate color.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(float gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, Position, null, Color, 0.0f, origin, 1.0f, SpriteEffects.None, 0.0f);
         }

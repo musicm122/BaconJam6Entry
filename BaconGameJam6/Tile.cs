@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using BaconGameJam6.Enum;
 using Microsoft.Xna.Framework;
-using BaconGameJam6.Enum;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BaconGameJam6
 {
-
-
     /// <summary>
     /// Stores the appearance and collision behavior of a tile.
     /// </summary>

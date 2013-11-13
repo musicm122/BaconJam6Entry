@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Audio;
 using System.IO;
-using Microsoft.Xna.Framework.Input;
+using System.Linq;
 using BaconGameJam6.Enum;
 using BaconGameJam6.Structures;
-using System.Collections;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace BaconGameJam6
 {
@@ -23,12 +20,13 @@ namespace BaconGameJam6
     {
         // Physical structure of the level.
         private Tile[,] tiles;
+
         private Texture2D[] layers;
-        Random randomizer = new Random();
+        private Random randomizer = new Random();
 
-        Texture2D explosionTexture;
+        private Texture2D explosionTexture;
 
-        List<ParticleData> particleList = new List<ParticleData>();
+        private List<ParticleData> particleList = new List<ParticleData>();
 
         // The layer which entities are drawn on top of.
         private const int EntityLayer = 2;
@@ -38,13 +36,15 @@ namespace BaconGameJam6
         {
             get { return player; }
         }
-        Player player;
+
+        private Player player;
 
         private List<Gem> gems = new List<Gem>();
         private List<Enemy> enemies = new List<Enemy>();
 
-        // Key locations in the level.        
+        // Key locations in the level.
         private Vector2 start;
+
         private Point exit = InvalidPosition;
         private static readonly Point InvalidPosition = new Point(-1, -1);
 
@@ -55,28 +55,32 @@ namespace BaconGameJam6
         {
             get { return score; }
         }
-        int score;
+
+        private int score;
 
         public bool ReachedExit
         {
             get { return reachedExit; }
         }
-        bool reachedExit;
+
+        private bool reachedExit;
 
         public TimeSpan TimeRemaining
         {
             get { return timeRemaining; }
         }
-        TimeSpan timeRemaining;
+
+        private TimeSpan timeRemaining;
 
         private const int PointsPerSecond = 5;
 
-        // Level content.        
+        // Level content.
         public ContentManager Content
         {
             get { return content; }
         }
-        ContentManager content;
+
+        private ContentManager content;
 
         //private SoundEffect exitReachedSound;
 
@@ -96,7 +100,7 @@ namespace BaconGameJam6
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
             explosionTexture = content.Load<Texture2D>("explosion");
-            
+
             timeRemaining = TimeSpan.FromMinutes(5);
 
             //timeRemaining = TimeSpan.FromMinutes(0.25);
@@ -162,7 +166,6 @@ namespace BaconGameJam6
                 throw new NotSupportedException("A level must have a starting point.");
             //if (exit == InvalidPosition)
             //    throw new NotSupportedException("A level must have an exit.");
-
         }
 
         /// <summary>
@@ -249,7 +252,6 @@ namespace BaconGameJam6
             return new Tile(Content.Load<Texture2D>("Tiles/" + name), collision);
         }
 
-
         /// <summary>
         /// Loads a tile with a random appearance.
         /// </summary>
@@ -265,7 +267,6 @@ namespace BaconGameJam6
             int index = random.Next(variationCount);
             return LoadTile(baseName + index, collision);
         }
-
 
         /// <summary>
         /// Instantiates a player, puts him in the level, and remembers where to put him when he is resurrected.
@@ -324,7 +325,7 @@ namespace BaconGameJam6
             Content.Unload();
         }
 
-        #endregion
+        #endregion Loading
 
         #region Bounds and collision
 
@@ -348,7 +349,7 @@ namespace BaconGameJam6
 
         /// <summary>
         /// Gets the bounding rectangle of a tile in world space.
-        /// </summary>        
+        /// </summary>
         public Rectangle GetBounds(int x, int y)
         {
             return new Rectangle(x * Tile.Width, y * Tile.Height, Tile.Width, Tile.Height);
@@ -370,30 +371,28 @@ namespace BaconGameJam6
             get { return tiles.GetLength(1); }
         }
 
-        #endregion
-
-
+        #endregion Bounds and collision
 
         #region Particle Effects
-        
-        private void AddExplosion(Vector2 explosionPos, int numberOfParticles, float size, float maxAge, GameTime gameTime)
+
+        private void AddExplosion(Vector2 explosionPos, int numberOfParticles, float size, float maxAge, float gameTime)
         {
             for (int i = 0; i < numberOfParticles; i++)
                 AddExplosionParticle(explosionPos, size, maxAge, gameTime);
         }
 
-        private void AddExplosionParticle(Vector2 explosionPos, float explosionSize, float maxAge, GameTime gameTime)
+        private void AddExplosionParticle(Vector2 explosionPos, float explosionSize, float maxAge, float gameTime)
         {
             ParticleData particle = new ParticleData();
 
             particle.OrginalPosition = explosionPos;
             particle.Position = particle.OrginalPosition;
 
-            particle.BirthTime = (float)gameTime.TotalGameTime.TotalMilliseconds;
+            particle.BirthTime = (float)gameTime*1000;
             particle.MaxAge = maxAge;
             particle.Scaling = 0.25f;
             particle.ModColor = Color.White;
-            
+
             float particleDistance = (float)randomizer.NextDouble() * explosionSize;
             Vector2 displacement = new Vector2(particleDistance, 0);
             float angle = MathHelper.ToRadians(randomizer.Next(360));
@@ -404,6 +403,7 @@ namespace BaconGameJam6
 
             particleList.Add(particle);
         }
+
         #endregion Particle Effects
 
         #region Update
@@ -413,13 +413,12 @@ namespace BaconGameJam6
         /// and handles the time limit with scoring.
         /// </summary>
         public void Update(
-            GameTime gameTime,
+            float gameTime,
             KeyboardState keyboardState,
             GamePadState gamePadState,
             DisplayOrientation orientation)
         {
-
-            if (enemies.Where(x=>!x.IsDead).Count()==0) 
+            if (enemies.Where(x => !x.IsDead).Count() == 0)
             {
                 reachedExit = true;
             }
@@ -432,16 +431,16 @@ namespace BaconGameJam6
             else if (ReachedExit)
             {
                 // Animate the time being converted into points.
-                int seconds = (int)Math.Round(gameTime.ElapsedGameTime.TotalSeconds * 100.0f);
+                int seconds = (int)Math.Round(gameTime * 100.0f);
                 seconds = Math.Min(seconds, (int)Math.Ceiling(TimeRemaining.TotalSeconds));
                 timeRemaining -= TimeSpan.FromSeconds(seconds);
                 score += seconds * PointsPerSecond;
             }
             else
             {
-                timeRemaining -= gameTime.ElapsedGameTime;
+                timeRemaining -= TimeSpan.FromSeconds(gameTime);
                 Player.Update(gameTime, keyboardState, gamePadState, orientation);
-                if (Player.isAttacking) 
+                if (Player.isAttacking)
                 {
                     OnPlayerAttacks(gameTime);
                 }
@@ -469,17 +468,17 @@ namespace BaconGameJam6
                 timeRemaining = TimeSpan.Zero;
         }
 
-        private void OnPlayerAttacks(GameTime gameTime)
+        private void OnPlayerAttacks(float gameTime)
         {
             var explosionPosition = (Player.Position + Player.AttackOffset);
             drawEffect = true;
-            AddExplosion(explosionPosition, 10, 80.0f, 2000.0f, gameTime);
+            AddExplosion(explosionPosition, 10, 80.0f, 2000.0f,gameTime);
         }
 
         /// <summary>
         /// Animates each gem and checks to allows the player to collect them.
         /// </summary>
-        private void UpdateGems(GameTime gameTime)
+        private void UpdateGems(float gameTime)
         {
             for (int i = 0; i < gems.Count; ++i)
             {
@@ -498,12 +497,12 @@ namespace BaconGameJam6
         /// <summary>
         /// Animates each enemy and allow them to kill the player.
         /// </summary>
-        private void UpdateEnemies(GameTime gameTime)
+        private void UpdateEnemies(float gameTime)
         {
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(gameTime);
-                if (player.IsAttacking && enemy.BoundingRectangle.Intersects(Player.AttactRectangle) && !enemy.IsDead) 
+                if (player.IsAttacking && enemy.BoundingRectangle.Intersects(Player.AttactRectangle) && !enemy.IsDead)
                 {
                     enemy.TakeDamage();
                     score++;
@@ -556,46 +555,46 @@ namespace BaconGameJam6
         public void StartNewLife()
         {
             //First try at default start position
-            Player.Position= start;
-            
+            Player.Position = start;
+
             //get the distance from the player the enemies need to be
             var playerRange = Enumerable.Range((int)Player.Position.X - 3, (int)Player.Position.X + 3);
 
             //if player bounding box is not intersecting with any enemy then respawn
-            var livingEnemies = enemies.Where(x => !x.IsDead );
-            
+            var livingEnemies = enemies.Where(x => !x.IsDead);
+
             //using the default back buffer so we can get a number that is guarnteed to be inside the screen
-            Vector2 playerXoffset = new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth/8, 0f);
+            Vector2 playerXoffset = new Vector2(GraphicsDeviceManager.DefaultBackBufferWidth / 8, 0f);
 
             //Incrememt players x position while player is intersecting an enemy and is on the same y plane as the enemy
-            while (livingEnemies.Where(x => playerRange.Contains((int)x.Position.X) && x.Position.Y==Player.Position.Y).Count() > 0)
+            while (livingEnemies.Where(x => playerRange.Contains((int)x.Position.X) && x.Position.Y == Player.Position.Y).Count() > 0)
             {
                 //move the player
-                Player.Position+=playerXoffset;
-                
+                Player.Position += playerXoffset;
+
                 //Reset the player offset
                 playerRange = Enumerable.Range((int)Player.Position.X - 3, (int)Player.Position.X + 3);
 
                 //If Player is outside the bounds of the screen
-                if (Player.Position.X > GraphicsDeviceManager.DefaultBackBufferWidth) 
+                if (Player.Position.X > GraphicsDeviceManager.DefaultBackBufferWidth)
                 {
                     //Try for the default spawn point
                     Player.Position = start;
                 }
             }
-            
+
             //reset the state of the player(from dead to alive)
             Player.Reset();
         }
 
-        #endregion
+        #endregion Update
 
         #region Draw
 
         /// <summary>
         /// Draw everything in the level from background to foreground.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(float gameTime, SpriteBatch spriteBatch)
         {
             for (int i = 0; i <= EntityLayer; ++i)
                 spriteBatch.Draw(layers[i], Vector2.Zero, Color.White);
@@ -606,10 +605,10 @@ namespace BaconGameJam6
                 gem.Draw(gameTime, spriteBatch);
 
             Player.Draw(gameTime, spriteBatch);
-            
-            if(Player.isAttacking)
+
+            if (Player.isAttacking)
             {
-                spriteBatch.Draw(Player.attackEffect,Player.AttactRectangle,Color.Yellow);
+                spriteBatch.Draw(Player.attackEffect, Player.AttactRectangle, Color.Yellow);
             }
 
             foreach (Enemy enemy in enemies)
@@ -663,7 +662,7 @@ namespace BaconGameJam6
             }
         }
 
-        #endregion
+        #endregion Draw
 
         public bool drawEffect { get; set; }
     }

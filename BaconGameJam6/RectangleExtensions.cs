@@ -1,11 +1,13 @@
 ﻿#region File Description
+
 //-----------------------------------------------------------------------------
 // RectangleExtensions.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+
+#endregion File Description
 
 using System;
 using Microsoft.Xna.Framework;

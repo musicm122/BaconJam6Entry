@@ -1,32 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using BaconGameJam6.Enum;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BaconGameJam6
 {
-    
-
     /// <summary>
     /// A monster who is impeding the progress of our fearless adventurer.
     /// </summary>
     public class Enemy
     {
-        private float MaxCooldownTime= 0.5f;
+        private float MaxCooldownTime = 0.5f;
         private float CooldownTimer = 0.5f;
         public bool IsCoolingDown = false;
 
         public bool IsDead = false;
+
         public int Hitpoints { get; set; }
+
         public string EnemyType { get; set; }
+
         public Level Level
         {
             get { return level; }
         }
-        Level level;
+
+        private Level level;
 
         /// <summary>
         /// Position in world space of the bottom center of this enemy.
@@ -35,9 +34,11 @@ namespace BaconGameJam6
         {
             get { return position; }
         }
-        Vector2 position;
+
+        private Vector2 position;
 
         private Rectangle localBounds;
+
         /// <summary>
         /// Gets a rectangle which bounds this enemy in world space.
         /// </summary>
@@ -54,6 +55,7 @@ namespace BaconGameJam6
 
         // Animations
         private Animation runAnimation;
+
         private Animation idleAnimation;
         private AnimationPlayer sprite;
 
@@ -111,7 +113,6 @@ namespace BaconGameJam6
 
         public void SetHitpoints()
         {
-            
             if (EnemyType == "TheRainbow")
             {
                 Hitpoints = 3;
@@ -120,14 +121,12 @@ namespace BaconGameJam6
             {
                 Hitpoints = 1;
             }
-
         }
 
         public void TakeDamage()
         {
             if (!IsCoolingDown)
             {
-                
                 this.Hitpoints--;
                 if (Hitpoints <= 0)
                 {
@@ -146,19 +145,18 @@ namespace BaconGameJam6
         /// <summary>
         /// Paces back and forth along a platform, waiting at either end.
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(float gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float elapsed = gameTime;
 
             // Calculate tile position based on the side we are walking towards.
             float posX = Position.X + localBounds.Width / 2 * (int)direction;
             int tileX = (int)Math.Floor(posX / Tile.Width) - (int)direction;
             int tileY = (int)Math.Floor(Position.Y / Tile.Height);
 
-            
-            if(IsCoolingDown)
+            if (IsCoolingDown)
             {
-                CooldownTimer = Math.Max(0.0f, CooldownTimer - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                CooldownTimer = Math.Max(0.0f, CooldownTimer - gameTime);
                 if (CooldownTimer <= 0.0f)
                 {
                     IsCoolingDown = false;
@@ -168,7 +166,7 @@ namespace BaconGameJam6
             if (waitTime > 0)
             {
                 // Wait for some amount of time.
-                waitTime = Math.Max(0.0f, waitTime - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                waitTime = Math.Max(0.0f, waitTime - gameTime);
                 if (waitTime <= 0.0f)
                 {
                     // Then turn around.
@@ -204,7 +202,7 @@ namespace BaconGameJam6
         /// <summary>
         /// Draws the animated enemy.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool IsRainbow = false)
+        public void Draw(float gameTime, SpriteBatch spriteBatch, bool IsRainbow = false)
         {
             // Stop running when the game is paused or before turning around.
             if (!Level.Player.IsAlive ||
@@ -218,15 +216,13 @@ namespace BaconGameJam6
             {
                 sprite.PlayAnimation(runAnimation);
             }
-
 
             // Draw facing the way the enemy is moving.
             SpriteEffects flip = direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             sprite.Draw(gameTime, spriteBatch, Position, flip, isRainbow: IsRainbow);
-
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color tint)
+        public void Draw(float gameTime, SpriteBatch spriteBatch, Color tint)
         {
             // Stop running when the game is paused or before turning around.
             if (!Level.Player.IsAlive ||
@@ -240,16 +236,13 @@ namespace BaconGameJam6
             {
                 sprite.PlayAnimation(runAnimation);
             }
-
 
             // Draw facing the way the enemy is moving.
             SpriteEffects flip = direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             sprite.Draw(gameTime, spriteBatch, Position, flip, tint);
-
         }
 
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(float gameTime, SpriteBatch spriteBatch)
         {
             // Stop running when the game is paused or before turning around.
             if (!Level.Player.IsAlive ||
@@ -263,15 +256,14 @@ namespace BaconGameJam6
             {
                 sprite.PlayAnimation(runAnimation);
             }
-
 
             // Draw facing the way the enemy is moving.
             SpriteEffects flip = direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             if (this.IsCoolingDown)
             {
-                sprite.Draw(gameTime, spriteBatch, Position,flip,Color.Red);
+                sprite.Draw(gameTime, spriteBatch, Position, flip, Color.Red);
             }
-            else 
+            else
             {
                 sprite.Draw(gameTime, spriteBatch, Position, flip);
             }

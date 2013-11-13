@@ -1,13 +1,10 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-#endregion
+
+#endregion Using Statements
 
 namespace BaconGameJam6
 {
@@ -16,8 +13,8 @@ namespace BaconGameJam6
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
         public Game1()
             : base()

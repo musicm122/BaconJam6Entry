@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace BaconGameJam6.Structures
 {
-    class ParticleData
+    internal class ParticleData
     {
         public float BirthTime;
         public float MaxAge;

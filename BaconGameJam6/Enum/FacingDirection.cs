@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace BaconGameJam6.Enum
+﻿namespace BaconGameJam6.Enum
 {
     /// <summary>
     /// Facing direction along the X axis.

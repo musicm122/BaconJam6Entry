@@ -1,11 +1,13 @@
 ﻿#region File Description
+
 //-----------------------------------------------------------------------------
 // AnimationPlayer.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+
+#endregion File Description
 
 using System;
 using Microsoft.Xna.Framework;
@@ -13,11 +15,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BaconGameJam6
 {
-    
     /// <summary>
     /// Controls playback of an Animation.
     /// </summary>
-    struct AnimationPlayer
+    internal struct AnimationPlayer
     {
         /// <summary>
         /// Gets the animation which is currently playing.
@@ -26,7 +27,8 @@ namespace BaconGameJam6
         {
             get { return animation; }
         }
-        Animation animation;
+
+        private Animation animation;
 
         /// <summary>
         /// Gets the index of the current frame in the animation.
@@ -35,7 +37,8 @@ namespace BaconGameJam6
         {
             get { return frameIndex; }
         }
-        int frameIndex;
+
+        private int frameIndex;
 
         /// <summary>
         /// The amount of time in seconds that the current frame has been shown for.
@@ -68,13 +71,13 @@ namespace BaconGameJam6
         /// <summary>
         /// Advances the time position and draws the current frame of the animation.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, bool isRainbow=false)
+        public void Draw(float gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, bool isRainbow = false)
         {
             if (Animation == null)
                 throw new NotSupportedException("No animation is currently playing.");
 
             // Process passing time.
-            time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            time += gameTime;
             while (time > Animation.FrameTime)
             {
                 time -= Animation.FrameTime;
@@ -98,21 +101,19 @@ namespace BaconGameJam6
             {
                 spriteBatch.Draw(Animation.Texture, position, source, RandomHelper.GetRandomColor(), 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
             }
-            else 
+            else
             {
                 spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
             }
-            
         }
 
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, Color tint)
+        public void Draw(float gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, Color tint)
         {
             if (Animation == null)
                 throw new NotSupportedException("No animation is currently playing.");
 
             // Process passing time.
-            time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            time += gameTime;
             while (time > Animation.FrameTime)
             {
                 time -= Animation.FrameTime;
@@ -133,9 +134,6 @@ namespace BaconGameJam6
 
             // Draw the current frame.
             spriteBatch.Draw(Animation.Texture, position, source, tint, 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
-
         }
-
-
     }
 }
