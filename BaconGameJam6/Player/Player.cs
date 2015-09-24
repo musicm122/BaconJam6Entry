@@ -265,7 +265,7 @@ namespace BaconGameJam6
         {
             // Load animated textures.
             idleAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/adIdle"), 0.1f, true);
-            runAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/Run"), 0.1f, true);
+            runAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/Run"), 0.2f, true);
             attackAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/quickAttack"), 0.3f, false);
             jumpAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/aJump"), 0.1f, false);
             celebrateAnimation = new Animation(RefLevel.Content.Load<Texture2D>("Sprites/Player/Celebrate"), 0.1f, false);

@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NuclearWinter.UI;
+using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using NuclearWinter;
-using NUI = NuclearWinter.UI;
-using Microsoft.Xna.Framework;
-using System.IO;
-
+using NuclearWinter.UI;
 
 namespace BaconGameJam6.GameState
 {
     public class GameStateActivePlay : NuclearWinter.GameFlow.GameStateFadeTransition<PlatformerGame>
     {
-        Screen mScreen;
+        private Screen mScreen;
+
         // Global content.
         private SpriteFont hudFont;
+
         private Texture2D winOverlay;
         private Texture2D loseOverlay;
         private Texture2D diedOverlay;
@@ -36,7 +32,6 @@ namespace BaconGameJam6.GameState
         // When the time remaining is less than the warning time, it blinks on the hud
         private static readonly TimeSpan WarningTime = TimeSpan.FromSeconds(30);
 
-
         public GameStateActivePlay(PlatformerGame game)
             : base(game)
         {
@@ -44,7 +39,6 @@ namespace BaconGameJam6.GameState
 
         public override void Start()
         {
-            
             // Load fonts
             hudFont = Content.Load<SpriteFont>("Fonts/Hud");
 
@@ -188,7 +182,6 @@ namespace BaconGameJam6.GameState
             LoadNextLevel();
         }
 
-
         public override void Draw()
         {
             Game.SpriteBatch.Begin();
@@ -197,7 +190,6 @@ namespace BaconGameJam6.GameState
 
             Game.SpriteBatch.End();
             mScreen.Draw();
-
         }
 
         public override void Update(float _fElapsedTime)
@@ -206,13 +198,21 @@ namespace BaconGameJam6.GameState
             HandleInput();
 
             // update our level, passing down the GameTime along with all of our input states
-            
-            level.Update(_fElapsedTime, keyboardState, gamePadState, Game.Window.CurrentOrientation);
 
+            level.Update(_fElapsedTime, keyboardState, gamePadState, Game.Window.CurrentOrientation);
 
             mScreen.IsActive = Game.IsActive;
             mScreen.HandleInput();
             mScreen.Update(_fElapsedTime);
+
+            if ((!Game.GameStateMgr.IsSwitching) && Game.InputMgr.KeyboardState.IsKeyDown(Keys.P))
+            {
+                Game.PauseState.IsPaused = !Game.PauseState.IsPaused;
+                if (Game.PauseState.IsPaused)
+                {
+                    Game.GameStateMgr.SwitchState(Game.PauseState);
+                }
+            }
         }
     }
 }

@@ -1,14 +1,9 @@
-﻿using System;
-using System.IO;
-using BaconGameJam6.GameState;
+﻿using BaconGameJam6.GameState;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using NuclearWinter;
-using NuclearWinter.GameFlow;
 using NuclearWinter.UI;
-using NGF = NuclearWinter.GameFlow;
 
 namespace BaconGameJam6
 {
@@ -16,11 +11,14 @@ namespace BaconGameJam6
     {
         //internal GameStates.GameStateIntro Intro { get; private set; }
         //GameStateMgr<PlatformerGame> GameStateManager;
-        internal GameStateMainMenu MainMenu { get; private set; }
+        internal GameStateTitleScreen MainMenu { get; private set; }
+
         internal GameStateActivePlay PlayState { get; private set; }
 
+        internal GameStatePause PauseState { get; private set; }
+
         internal Style UIStyle { get; private set; }
-                
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -32,27 +30,29 @@ namespace BaconGameJam6
             //graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
         protected override void Initialize()
         {
             base.Initialize();
-            
+
             //GameStateManager = new NGF.GameStateMgr<PlatformerGame>(this);
             //Components.Add(GameStateManager);
             LoadUIStyle();
-            MainMenu = new GameStateMainMenu(this);
+            MainMenu = new GameStateTitleScreen(this);
             PlayState = new GameStateActivePlay(this);
-            GameStateMgr.SwitchState(MainMenu);
+            PauseState = new GameStatePause(this);
 
+            GameStateMgr.SwitchState(MainMenu);
         }
+
         protected override void LoadContent()
         {
-            base.LoadContent(); 
+            base.LoadContent();
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
         }
 
-        public void LoadUIStyle() 
+        public void LoadUIStyle()
         {
             // UI Style
             UIStyle = new Style();
@@ -145,7 +145,7 @@ namespace BaconGameJam6
             UIStyle.TextAreaFrameCornerSize = 15;
             UIStyle.TextAreaGutterFrame = Content.Load<Texture2D>("Sprites/UI/TextAreaGutterFrame");
             UIStyle.TextAreaGutterCornerSize = 15;
-            
+
             //EnsureProperPresentationParams();
         }
 
@@ -156,11 +156,7 @@ namespace BaconGameJam6
 
         protected override void Draw(GameTime gameTime)
         {
-
             base.Draw(gameTime);
         }
-
-        
-        
     }
 }

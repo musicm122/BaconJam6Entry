@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
 using NuclearWinter.UI;
-using NUI = NuclearWinter.UI;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
 
+using NUI = NuclearWinter.UI;
 
 namespace BaconGameJam6.GameState
 {
     public class GameStatePause : NuclearWinter.GameFlow.GameStateFadeTransition<PlatformerGame>
     {
-        Screen mScreen;
+        private Screen mScreen;
+
         public bool IsPaused { get; set; }
+
         public GameStatePause(PlatformerGame game)
             : base(game)
         {
@@ -51,8 +48,8 @@ namespace BaconGameJam6.GameState
             mScreen.HandleInput();
 
             mScreen.Update(_fElapsedTime);
-            
-            if (!IsPaused && (!Game.GameStateMgr.IsSwitching)) 
+            Game.PauseState.IsPaused = !Game.PauseState.IsPaused;
+            if (!IsPaused && (!Game.GameStateMgr.IsSwitching))
             {
                 Game.GameStateMgr.SwitchState(Game.PlayState);
             }

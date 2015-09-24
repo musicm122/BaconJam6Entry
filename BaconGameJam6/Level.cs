@@ -388,7 +388,7 @@ namespace BaconGameJam6
             particle.OrginalPosition = explosionPos;
             particle.Position = particle.OrginalPosition;
 
-            particle.BirthTime = (float)gameTime*1000;
+            particle.BirthTime = (float)gameTime * 1000;
             particle.MaxAge = maxAge;
             particle.Scaling = 0.25f;
             particle.ModColor = Color.White;
@@ -472,7 +472,7 @@ namespace BaconGameJam6
         {
             var explosionPosition = (Player.Position + Player.AttackOffset);
             drawEffect = true;
-            AddExplosion(explosionPosition, 10, 80.0f, 2000.0f,gameTime);
+            AddExplosion(explosionPosition, 10, 80.0f, 2000.0f, gameTime);
         }
 
         /// <summary>

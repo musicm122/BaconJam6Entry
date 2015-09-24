@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NuclearWinter.UI;
-using NuclearWinter;
-using NUI = NuclearWinter.UI;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
+using NuclearWinter.UI;
 
+using NUI = NuclearWinter.UI;
 
 namespace BaconGameJam6.GameState
 {
-    public class GameStateMainMenu : NuclearWinter.GameFlow.GameStateFadeTransition<PlatformerGame>
+    public class GameStateTitleScreen : NuclearWinter.GameFlow.GameStateFadeTransition<PlatformerGame>
     {
-        Screen mScreen;
+        private Screen mScreen;
 
-        public GameStateMainMenu(PlatformerGame game)
+        public GameStateTitleScreen(PlatformerGame game)
             : base(game)
         {
         }
@@ -57,7 +52,5 @@ namespace BaconGameJam6.GameState
                 Game.GameStateMgr.SwitchState(Game.PlayState);
             }
         }
-
-
     }
 }
